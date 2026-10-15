@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <title>Bobine</title>
+  </head>
+  <body>
+    <div class="app">
+      <header class="top">
+        <div class="brand">
+          <img class="brand-logo" src="/logo.svg" alt="" width="26" height="26" />
+          <span class="brand-name">Bobine</span>
+        </div>
+        <div class="menu" id="menu">
+          <button class="icon-btn" id="menu-btn" type="button" aria-haspopup="menu" aria-expanded="false" title="Options">
+            <span data-icon="more"></span>
+          </button>
+          <div class="menu-pop" id="menu-pop" role="menu" hidden>
+            <button type="button" role="menuitem" data-action="export"><span data-icon="download"></span>Exporter la liste</button>
+            <button type="button" role="menuitem" data-action="import"><span data-icon="upload"></span>Importer une liste</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="main">
+        <section class="hero">
+          <p class="greeting" id="greeting">Bonsoir</p>
+          <h1 class="headline">Reprends là où tu t’es arrêté.</h1>
+
+          <form class="adder" id="adder" autocomplete="off" novalidate>
+            <span class="adder-icon" data-icon="link"></span>
+            <input
+              id="link-input"
+              class="adder-input"
+              type="text"
+              inputmode="url"
+              spellcheck="false"
+              placeholder="Colle le lien d’une série ou d’un épisode…"
+              aria-label="Lien de la série"
+            />
+            <button class="btn btn-primary adder-btn" id="add-btn" type="submit" disabled>
+              <span data-icon="plus"></span><span class="label">Ajouter</span>
+            </button>
+          </form>
+          <div class="preview" id="preview" aria-live="polite"></div>
+        </section>
+
+        <div class="toolbar" id="toolbar" hidden>
+          <div class="tabs" role="tablist" id="tabs">
+            <button role="tab" data-filter="all" aria-selected="true">Tout <span class="count"></span></button>
+            <button role="tab" data-filter="watching" aria-selected="false">En cours <span class="count"></span></button>
+            <button role="tab" data-filter="planned" aria-selected="false">À voir <span class="count"></span></button>
+            <button role="tab" data-filter="done" aria-selected="false">Terminées <span class="count"></span></button>
+          </div>
+          <label class="search">
+            <span data-icon="search"></span>
+            <input id="search" type="search" placeholder="Rechercher" spellcheck="false" aria-label="Rechercher" />
+            <kbd class="kbd">Ctrl F</kbd>
+          </label>
+        </div>
+
+        <section class="list" id="list" aria-label="Mes séries"></section>
+        <div class="empty" id="empty" hidden></div>
+      </main>
+    </div>
+
+    <dialog class="dialog" id="editor" aria-labelledby="editor-title">
+      <form method="dialog" class="dialog-body" id="editor-form" novalidate>
+        <header class="dialog-head">
+          <h2 id="editor-title">Modifier</h2>
+          <button type="button" class="icon-btn" data-close title="Fermer"><span data-icon="x"></span></button>
+        </header>
+
+        <label class="field">
+          <span>Titre</span>
+          <input name="title" type="text" required maxlength="120" />
+        </label>
+        <label class="field">
+          <span>Lien</span>
+          <input name="url" type="text" inputmode="url" spellcheck="false" required />
+          <small class="field-error" data-error="url" hidden>Ce lien n’est pas valide.</small>
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Saison</span>
+            <input name="season" type="number" min="1" max="9999" step="1" required />
+          </label>
+          <label class="field">
+            <span>Épisode</span>
+            <input name="episode" type="number" min="1" max="9999" step="1" required />
+          </label>
+        </div>
+        <fieldset class="field">
+          <legend>Statut</legend>
+          <div class="segmented">
+            <label><input type="radio" name="status" value="watching" /><span>En cours</span></label>
+            <label><input type="radio" name="status" value="planned" /><span>À voir</span></label>
+            <label><input type="radio" name="status" value="done" /><span>Terminée</span></label>
+          </div>
+        </fieldset>
+        <label class="field">
+          <span>Note</span>
+          <textarea name="note" rows="2" maxlength="500" placeholder="Optionnel"></textarea>
+        </label>
+
+        <footer class="dialog-foot">
+          <button type="button" class="btn btn-danger-ghost" id="delete-btn"><span data-icon="trash"></span>Supprimer</button>
+          <span class="spacer"></span>
+          <button type="button" class="btn btn-ghost" data-close>Annuler</button>
+          <button type="submit" class="btn btn-primary" value="save">Enregistrer</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <div class="toasts" id="toasts" aria-live="polite"></div>
+    <input type="file" id="import-file" accept="application/json,.json" hidden />
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
