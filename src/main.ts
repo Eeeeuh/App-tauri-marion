@@ -66,9 +66,13 @@ function commit(next: Library, { animate = false } = {}): void {
   if (next === lib) return;
   lib = next;
   if (canSave) saver.schedule(serializeLibrary(lib));
-  const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
-  if (animate && viewTransitions && doc.startViewTransition && !reducedMotion.matches) doc.startViewTransition(render);
-  else render();
+  type VT = { ready: Promise<void>; finished: Promise<void>; updateCallbackDone: Promise<void> };
+  const doc = document as Document & { startViewTransition?: (cb: () => void) => VT };
+  if (animate && viewTransitions && doc.startViewTransition && !reducedMotion.matches) {
+    // A newer transition skips the previous one, which rejects its promises: that's expected.
+    const vt = doc.startViewTransition(render);
+    for (const p of [vt.ready, vt.finished, vt.updateCallbackDone]) p?.catch(() => {});
+  } else render();
 }
 
 /* ───────────────────────── Rendering ───────────────────────── */
